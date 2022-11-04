@@ -2,6 +2,7 @@
 
 Dave Wilson, Jeff Bowman, and others have built [crafted-emacs](https://github.com/SystemCrafters/crafted-emacs).
 This is an Emacs profile that tries to maximize the use of the built-in features of Emacs while minimizing the use of packages.
+It already has an autocompletion system so avoid another one.
 
 I had to install the JetBeans fonts on my Mac OS.
 Now it has the look and feel of Dave Wilson's setup on System Crafters.
@@ -17,7 +18,8 @@ I have too much invested in yasnippets to abandon it right now.
 
 I had to install the following:
 
-- use-package 
+- use-package
+- atomic-chrome
 - yasnippets
 
 
