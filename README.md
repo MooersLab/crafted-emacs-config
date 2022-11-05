@@ -47,7 +47,7 @@ Copy the config.el file to the `.crafted-emacs` folder.
 Git pull future updates from `crafted-emacs-config`.
 
 
-** Notes on intstallation of crafted-emacs on a Mac
+## Notes on intstallation of crafted-emacs on a Mac
 
 I had to install the JetBeans fonts on my Mac OS.
 Now it has the look and feel of Dave Wilson's setup on System Crafters.
@@ -57,7 +57,7 @@ The user's configuration resides in the top directory of *~/.crafted-emacs* in *
 I copied over my configuration in *user.el* from scimax and the configuration for yasnippets from *init.el* in latex-emacs.
 I have too much invested in yasnippets to abandon it right now.
 
-** Packages that I installed
+## Packages that I installed
 
 I installed the following:
 
@@ -65,7 +65,7 @@ I installed the following:
 - atomic-chrome
 - yasnippets
 
-** What is missing
+## What is missing
 
 - a Bibtex module
 I may have to install citar for handling BibteX.
