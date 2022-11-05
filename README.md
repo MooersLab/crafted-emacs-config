@@ -7,7 +7,7 @@ It is for advanced beginners and beyond.
 You need some experience with configuration files: probably more experience than is required to use scimax where many packages that an academic needs are built-in.
 I cannot compare it to Doom or Spacemacs because I have not invested sufficient effort in mastering them.
 However, with minimal effort, you can have a *Dave Wilson-like* environment up and running.
-I really like it.
+I really like it!
 
 ## User configuration
 
