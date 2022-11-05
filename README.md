@@ -67,5 +67,4 @@ I installed the following:
 
 ## What is missing
 
-- a Bibtex module
-I may have to install citar for handling BibteX.
+- A crafted-bibtex module. I may have to install citar for handling BibTeX.
