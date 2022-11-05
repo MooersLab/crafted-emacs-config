@@ -9,7 +9,7 @@ I cannot compare it to Doom or Spacemacs because I have not invested sufficient 
 However, with minimal effort, you can have a *Dave Wilson-like* environment up and running.
 I really like it.
 
-** User configuration
+## User configuration
 
 The user configuration file is called *config.el*.
 It resides in the top level of the `.crafted-emacs` folder.
@@ -40,10 +40,11 @@ I copied over my configuration in *user.el* for scimax and the configuration for
 My configuration for org-agenda supports ten task files, so modify to suit your needs.
 I added configuration for yasnippets.
 
-** Use of this file
+## Use of my config.el
 
 Clone this repo with `git clone https://github.com/MooersLab/crafted-emacs-config crafted-emacs-config` in your home directory.
 Copy the config.el file to the `.crafted-emacs` folder.
+Git pull future updates from `crafted-emacs-config`.
 
 
 ** Notes on intstallation of crafted-emacs on a Mac
