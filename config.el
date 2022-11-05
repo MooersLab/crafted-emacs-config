@@ -180,7 +180,6 @@
 ;; Needs code to reformat the bibtex key.
 ;;
 ;; https://www.anghyflawn.net/blog/2014/emacs-give-a-doi-get-a-bibtex-entry/
-
 (defun get-bibtex-from-doi (doi)
   "Get a BibTeX entry from the DOI"
   (interactive "MDOI: ")
@@ -204,6 +203,7 @@
  'bibtex-mode-hook
  (lambda ()
    (get-bibtex-from-doi nil)))
+
 ;;; C
 
 ;; Configuration for citar, a BibTeX manager compatible with the vertico stack.
