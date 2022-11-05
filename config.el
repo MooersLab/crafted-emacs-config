@@ -72,8 +72,9 @@
 
 ;;; example-config.el ends here
 
-;;(load "~/Documents/global.bib")
+;;; Below is Blaine's configuration
 
+;; Mac key bindings
 (setq mac-command-modifier 'meta) ; make cmd key do Meta
 (setq mac-option-modifier 'super) ; make option key do Super.
 (setq mac-control-modifier 'control) ; make Control key do Control
@@ -81,37 +82,7 @@
 (setq mac-right-command-modifier 'hyper)
 
 
-
-
-(setq bibtex-completion-bibliography '("/Users/blaine/Documents/global.bib")
-      bibtex-completion-library-path '("/Users/blaine/0papersLabeled/")
-      bibtex-completion-notes-path "/Users/blaine/Documents/notes/"
-      bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
-      bibtex-completion-additional-search-fields '(keywords)
-      bibtex-completion-display-formats
-      '((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
-        (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
-        (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-        (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-        (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
-      bibtex-completion-pdf-open-function
-      (lambda (fpath)
-        (call-process "open" nil 0 nil fpath)))
-
-(setq bibtex-autokey-year-length 4
-      bibtex-autokey-name-year-separator "-"
-      bibtex-autokey-year-title-separator "-"
-      bibtex-autokey-titleword-separator "-"
-      bibtex-autokey-titlewords 2
-      bibtex-autokey-titlewords-stretch 1
-      bibtex-autokey-titleword-length 5)
-
-;;(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
-;;(define-key org-mode-map (kbd "H-c") org-ref-insert-cite-function)
-;;(define-key org-mode-map (kbd "H-r") org-ref-insert-ref-function)
-;;(define-key org-mode-map (kbd "H-l") org-ref-insert-label-function)
-;;(define-key org-mode-map (kbd "H-d") 'doi-add-bibtex-entry)
-
+;;; Buffer switching
 ;; Switch to previous buffer
 (define-key global-map (kbd "s-<left>") 'previous-buffer)
 ;; Switch to next buffer
@@ -130,10 +101,10 @@
 (define-key minibuffer-local-map (kbd "<down>") 'next-complete-history-element)
 
 
-;; highlight current line
+;; Highlight current line (Needs more tweaking with current dark theme.)
 (global-hl-line-mode +1)
 (add-to-list 'default-frame-alist '(background-color . "lightmagenta"))
-(set-face-background 'hl-line "lightgray")
+(set-face-background 'hl-line "gray")
 (set-face-attribute 'mode-line nil :height 260)
 
 
@@ -234,6 +205,21 @@
  (lambda ()
    (get-bibtex-from-doi nil)))
 ;;; C
+
+;; Configuration for citar, a BibTeX manager compatible with the vertico stack.
+;; Source: https://github.com/emacs-citar/citar
+(use-package citar
+  :bind (("C-c b" . citar-insert-citation)
+         :map minibuffer-local-map
+         ("M-b" . citar-insert-preset))
+  :custom
+  (citar-bibliography '("/Users/blaine/Documents/global.bib")))
+
+(use-package citar-embark
+  :after citar embark
+  :no-require
+  :config (citar-embark-mode))
+
 ;;; D
 ;;; E
 ;;; F
@@ -328,7 +314,7 @@
 ;;; N
 ;;; O
 
-(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map (kbd "C-c a") 'org-agenda)
 (setq org-log-done t)
 ;; org-capture
 (define-key global-map "\C-cc" 'org-capture)
