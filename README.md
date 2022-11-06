@@ -57,14 +57,17 @@ It has the Doom mode-line that you might want to drop if you are coming from Gnu
 
 The user's configuration resides in the top directory of *~/.crafted-emacs* in *config.el*.
 I copied over my configuration in *user.el* from scimax and the configuration for yasnippets from *init.el* in latex-emacs.
-I have too much invested in yasnippets to abandon it right now.
+I created a link to my *snippets* folder in my *~/.emacs.default* profile.
+Crafted-emacs uses a built-in snippet manager.
+I do not have time to reformat my hundreds of yasnipppet snippets.
+I have too much invested in yasnippets to abandon it right now, so I installed yasnippets.
 
 ## Packages that I installed
 
 I installed the following:
 
 - use-package (I know; I should have used straight, but I was in a hurry.)
-- atomic-chrome
+- atomic-chrome (enables hooking up with GhostText to edit textareas in webpages.)
 - yasnippets
 
 ## What is missing
