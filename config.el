@@ -31,12 +31,12 @@
 (require 'crafted-latex)       ; A configuration for creating documents using the LaTeX typesetting language
 (require 'crafted-python)       ; A configuration for
 (require 'crafted-lisp)        ; A configuration for creating documents using the LaTeX typesetting language
-(require 'crafted-pdf-reader)        ; A configuration for creating documents using the LaTeX typesetting language
+;;(require 'crafted-pdf-reader)        ; A configuration for creating documents using the LaTeX typesetting language
 (require 'crafted-mastering-emacs)        ; A configuration for creating documents using the LaTeX typesetting language
 (require 'crafted-osx)        ; A configuration for creating documents using the LaTeX typesetting language
 ;;(require 'crafted-project)     ; built-in alternative to projectile
 (require 'crafted-speedbar)    ; built-in file-tree
-;(require 'crafted-screencast)  ; show current command and binding in modeline
+(require 'crafted-screencast)  ; show current command and binding in modeline
 (require 'crafted-compile)     ; automatically compile some emacs lisp files
 
 ;; Set the default face. The default face is the basis for most other
@@ -89,6 +89,8 @@
 (define-key global-map (kbd "s-<right>") 'next-buffer)
 
 
+
+
 ;; Minibuffer history keybindings
 ;; The calling up of a previously issued command in the minibuffer with ~M-p~ saves times.
 (autoload 'edit-server-maybe-dehtmlize-buffer "edit-server-htmlize" "edit-server-htmlize" t)
@@ -103,8 +105,8 @@
 
 ;; Highlight current line (Needs more tweaking with current dark theme.)
 (global-hl-line-mode +1)
-(add-to-list 'default-frame-alist '(background-color . "lightmagenta"))
-(set-face-background 'hl-line "gray")
+;;(add-to-list 'default-frame-alist '(background-color . "lightmagenta"))
+(set-face-background 'hl-line "dark cyan")
 (set-face-attribute 'mode-line nil :height 260)
 
 
@@ -150,14 +152,15 @@
 (global-set-key (kbd "M-<down>") 'move-line-region-down)
 (global-set-key (kbd "M-<up>") 'move-line-region-up)
 
-
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
 
 
 ;;;### Package configuration;;;;;;;;;;;;;;;;;;;;;
 
 ;; A
 ;; atomic-chrome, used to interact with GhostText extension for Google Chrome.
-(use-package atomic-chrome)
+(require 'atomic-chrome)
 (atomic-chrome-start-server)
 (setq atomic-chrome-default-major-mode 'python-mode)
 (setq atomic-chrome-extension-type-list '(ghost-text))
@@ -180,45 +183,47 @@
 ;; Needs code to reformat the bibtex key.
 ;;
 ;; https://www.anghyflawn.net/blog/2014/emacs-give-a-doi-get-a-bibtex-entry/
-(defun get-bibtex-from-doi (doi)
-  "Get a BibTeX entry from the DOI"
-  (interactive "MDOI: ")
-  (let ((url-mime-accept-string "text/bibliography;style=bibtex"))
-    (with-current-buffer
-        (url-retrieve-synchronously
-         (format "http://dx.doi.org/%s"
-                         (replace-regexp-in-string "http://dx.doi.org/" "" doi)))
-      (switch-to-buffer (current-buffer))
-      (goto-char (point-max))
-      (setq bibtex-entry
-            (buffer-substring
-             (string-match "@" (buffer-string))
-             (point)))
-      (kill-buffer (current-buffer))))
-  (insert (decode-coding-string bibtex-entry 'utf-8))
-  (define-key bibtex-mode-map (kbd "C-c b") 'get-bibtex-from-doi)
-  (bibtex-fill-entry))
-;; I want run the above function to define it upon entry into a Bibtex file.
-(add-hook
- 'bibtex-mode-hook
- (lambda ()
-   (get-bibtex-from-doi nil)))
+;;(defun get-bibtex-from-doi (doi)
+;;  "Get a BibTeX entry from the DOI"
+;;  (interactive "MDOI: ")
+;;  (let ((url-mime-accept-string "text/bibliography;style=bibtex"))
+;;    (with-current-buffer
+;;        (url-retrieve-synchronously
+;;         (format "http://dx.doi.org/%s"
+;;                         (replace-regexp-in-string "http://dx.doi.org/" "" doi)))
+;;      (switch-to-buffer (current-buffer))
+;;      (goto-char (point-max))
+;;      (setq bibtex-entry
+;;            (buffer-substring
+;;             (string-match "@" (buffer-string))
+;;             (point)))
+;;      (kill-buffer (current-buffer))))
+;;  (insert (decode-coding-string bibtex-entry 'utf-8))
+;;  (define-key bibtex-mode-map (kbd "C-c b") 'get-bibtex-from-doi)
+;;  (bibtex-fill-entry))
+;;;; I want run the above function to define it upon entry into a Bibtex file.
+;;(add-hook
+;; 'bibtex-mode-hook
+;; (lambda ()
+;;   (get-bibtex-from-doi nil)))
 
 ;;; C
 
-;; Configuration for citar, a BibTeX manager compatible with the vertico stack.
-;; Source: https://github.com/emacs-citar/citar
-(use-package citar
-  :bind (("C-c b" . citar-insert-citation)
-         :map minibuffer-local-map
-         ("M-b" . citar-insert-preset))
-  :custom
-  (citar-bibliography '("/Users/blaine/Documents/global.bib")))
-
-(use-package citar-embark
-  :after citar embark
-  :no-require
-  :config (citar-embark-mode))
+;;;; Configuration for citar, a BibTeX manager compatible with the vertico stack.
+;;;; Source: https://github.com/emacs-citar/citar
+;;(use-package citar
+;;  :ensure t
+;;  :bind (("C-c b" . citar-insert-citation)
+;;         :map minibuffer-local-map
+;;         ("M-b" . citar-insert-preset))
+;;  :custom
+;;  (citar-bibliography '("/Users/blaine/Documents/global.bib")))
+;;
+;;(use-package citar-embark
+;;  :ensure t
+;;  :after citar embark
+;;  :no-require
+;;  :config (citar-embark-mode))
 
 ;;; D
 ;;; E
@@ -261,16 +266,16 @@
 ;; The terms to be inserted into the square brackets
 ;; have to be added after running the function.
 (defun description (beg end)
-  "wrap the active region in an 'itemize' environment,
-  converting hyphens at the beginning of a line to \item"
+  "wrap the active region in an description environment,
+  converting hyphens at the beginning of a line to \\item"
   (interactive "r")
   (save-restriction
     (narrow-to-region beg end)
-    (beginning-of-buffer)
+    (goto-char (point-min))
     (insert "\\begin{description}\n")
     (while (re-search-forward "^- " nil t)
       (replace-match "\\\\item[ ]"))
-    (end-of-buffer)
+    (goto-char (point-max))
     (insert "\\end{description}\n")))
 
 
@@ -278,16 +283,16 @@
 ;; Converts a selected list into an enumerated list.
 ;; The elements of the list must begin with a dash.
 (defun enumerate (beg end)
-  "wrap the active region in an 'itemize' environment,
+  "wrap the active region in an enumerate environment,
   converting hyphens at the beginning of a line to \item"
   (interactive "r")
   (save-restriction
     (narrow-to-region beg end)
-    (beginning-of-buffer)
+    (goto-char (point-min))
     (insert "\\begin{enumerate}\n")
     (while (re-search-forward "^- " nil t)
       (replace-match "\\\\item "))
-    (end-of-buffer)
+    (goto-char (point-max))
     (insert "\\end{enumerate}\n")))
 
 
@@ -298,16 +303,16 @@
 ;; and a description list.
 ;; Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-region-filling-when-inserting-itemize}
 (defun itemize (beg end)
-  "wrap the active region in an 'itemize' environment,
-  converting hyphens at the beginning of a line to \item"
+  "wrap the active region in an itemize environment,
+  converting hyphens at the beginning of a line to \\item"
   (interactive "r")
   (save-restriction
     (narrow-to-region beg end)
-    (beginning-of-buffer)
+    (goto-char (point-min))
     (insert "\\begin{itemize}\n")
     (while (re-search-forward "^- " nil t)
       (replace-match "\\\\item "))
-    (end-of-buffer)
+    (goto-char (point-max))
     (insert "\\end{itemize}\n")))
 
 ;;; M
@@ -396,7 +401,7 @@
     (if (re-search-forward
          (format org-complex-heading-regexp-format (regexp-quote hd))
          nil t)
-        (goto-char (point-at-bol))
+        (goto-char (line-beginning-position))
       (goto-char (point-max))
       (or (bolp) (insert "\n"))
       (insert "* " hd "\n")))
@@ -464,46 +469,49 @@
 
 ;; org-noter and org-noter-pdftools
 
-(use-package org-noter
-  :config
-  ;; Your org-noter config ........
-  (require 'org-noter-pdftools))
-
-(use-package org-pdftools
-  :hook (org-mode . org-pdftools-setup-link))
-
-(use-package org-noter-pdftools
-  :after org-noter
-  :config
-  ;; Add a function to ensure precise note is inserted
-  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
-    (interactive "P")
-    (org-noter--with-valid-session
-     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
-                                                   (not org-noter-insert-note-no-questions)
-                                                 org-noter-insert-note-no-questions))
-           (org-pdftools-use-isearch-link t)
-           (org-pdftools-use-freepointer-annot t))
-       (org-noter-insert-note (org-noter--get-precise-info)))))
-
-  ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
-  (defun org-noter-set-start-location (&optional arg)
-    "When opening a session with this document, go to the current location.
-With a prefix ARG, remove start location."
-    (interactive "P")
-    (org-noter--with-valid-session
-     (let ((inhibit-read-only t)
-           (ast (org-noter--parse-root))
-           (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
-       (with-current-buffer (org-noter--session-notes-buffer session)
-         (org-with-wide-buffer
-          (goto-char (org-element-property :begin ast))
-          (if arg
-              (org-entry-delete nil org-noter-property-note-location)
-            (org-entry-put nil org-noter-property-note-location
-                           (org-noter--pretty-print-location location))))))))
-  (with-eval-after-load 'pdf-annot
-    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+;; (use-package org-noter
+;;   :ensure t
+;;   :config
+;;   ;; Your org-noter config ........
+;;   (require 'org-noter-pdftools))
+;;
+;; (use-package org-pdftools
+;;   :ensure t
+;;   :hook (org-mode . org-pdftools-setup-link))
+;;
+;; (use-package org-noter-pdftools
+;;   :ensure t
+;;   :after org-noter
+;;   :config
+;;   ;; Add a function to ensure precise note is inserted
+;;   (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+;;     (interactive "P")
+;;     (org-noter--with-valid-session
+;;      (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+;;                                                    (not org-noter-insert-note-no-questions)
+;;                                                  org-noter-insert-note-no-questions))
+;;            (org-pdftools-use-isearch-link t)
+;;            (org-pdftools-use-freepointer-annot t))
+;;        (org-noter-insert-note (org-noter--get-precise-info)))))
+;;
+;;   ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
+;;   (defun org-noter-set-start-location (&optional arg)
+;;     "When opening a session with this document, go to the current location.
+;; With a prefix ARG, remove start location."
+;;     (interactive "P")
+;;     (org-noter--with-valid-session
+;;      (let ((inhibit-read-only t)
+;;            (ast (org-noter--parse-root))
+;;            (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
+;;        (with-current-buffer (org-noter--session-notes-buffer session)
+;;          (org-with-wide-buffer
+;;           (goto-char (org-element-property :begin ast))
+;;           (if arg
+;;               (org-entry-delete nil org-noter-property-note-location)
+;;             (org-entry-put nil org-noter-property-note-location
+;;                            (org-noter--pretty-print-location location))))))))
+;;   (with-eval-after-load 'pdf-annot
+;;     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
 
 
@@ -565,54 +573,55 @@ With a prefix ARG, remove start location."
       (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
 
 
-(defun jethro/org-roam-node-from-cite (keys-entries)
-  (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
-  (let ((title (citar--format-entry-no-widths (cdr keys-entries)
-                                              "${author editor} :: ${title}")))
-    (org-roam-capture- :templates
-                       '(("r" "reference" plain "%?" :if-new
-                          (file+head "reference/${citekey}.org"
-                                     ":PROPERTIES:
-:ROAM_REFS: [cite:@${citekey}]
-:END:
-#+title: ${title}\n")
-                          :immediate-finish t
-                          :unnarrowed t))
-                       :info (list :citekey (car keys-entries))
-                       :node (org-roam-node-create :title title)
-                       :props '(:finalize find-file))))
+;;(defun jethro/org-roam-node-from-cite (keys-entries)
+;;  (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
+;;  (let ((title (citar--format-entry-no-widths (cdr keys-entries)
+;;                                              "${author editor} :: ${title}")))
+;;    (org-roam-capture- :templates
+;;                       '(("r" "reference" plain "%?" :if-new
+;;                          (file+head "reference/${citekey}.org"
+;;                                     ":PROPERTIES:
+;;:ROAM_REFS: [cite:@${citekey}]
+;;:END:
+;;#+title: ${title}\n")
+;;                          :immediate-finish t
+;;                          :unnarrowed t))
+;;                       :info (list :citekey (car keys-entries))
+;;                       :node (org-roam-node-create :title title)
+;;                       :props '(:finalize find-file))))
 
 
-(defun jethro/tag-new-node-as-draft ()
-  (org-roam-tag-add '("draft")))
-(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
-
-;;; org-roam-bibtex
-(use-package org-roam-bibtex
-  :hook (org-roam-mode . org-roam-bibtex-mode))
-
-(setq orb-preformat-keywords
-      '("citekey" "title" "url" "author-or-editor" "keywords" "file")
-      orb-process-file-keyword t
-      orb-file-field-extensions '("pdf"))
-
-(setq orb-templates
-      '(("r" "ref" plain(function org-roam-capture--get-point)
-         ""
-         :file-name "${citekey}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
-  - tags ::
-  - keywords :: ${keywords}
-
-  *Notes
-  :PROPERTIES:
-  :Custom_ID: ${citekey}
-  :URL: ${url}
-  :AUTHOR: ${author-or-editor}
-  :NOTER_DOCUMENT: ${file}
-  :NOTER_PAGE:
-  :END:")))
-
+;;(defun jethro/tag-new-node-as-draft ()
+;;  (org-roam-tag-add '("draft")))
+;;(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
+;;
+;;;;; org-roam-bibtex
+;;(use-package org-roam-bibtex
+;;  :ensure t
+;;  :hook (org-roam-mode . org-roam-bibtex-mode))
+;;
+;;(setq orb-preformat-keywords
+;;      '("citekey" "title" "url" "author-or-editor" "keywords" "file")
+;;      orb-process-file-keyword t
+;;      orb-file-field-extensions '("pdf"))
+;;
+;;(setq orb-templates
+;;      '(("r" "ref" plain(function org-roam-capture--get-point)
+;;         ""
+;;         :file-name "${citekey}"
+;;         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
+;;  - tags ::
+;;  - keywords :: ${keywords}
+;;
+;;  *Notes
+;;  :PROPERTIES:
+;;  :Custom_ID: ${citekey}
+;;  :URL: ${url}
+;;  :AUTHOR: ${author-or-editor}
+;;  :NOTER_DOCUMENT: ${file}
+;;  :NOTER_PAGE:
+;;  :END:")))
+;;
 
 
 ;; *** org-tree-to-indirect-buffer
@@ -623,7 +632,7 @@ With a prefix ARG, remove start location."
 ;; This latter function is built-in.
 ;; Repeating C-c C-x b will drill down to the lowest headline level.
 
-(defun my-org-tree-to-indirect-buffer (&optional arg)
+(defun my-org-tree-to-indirect-buffer (&optional)
   "Create indirect buffer and narrow it to current subtree.
 The buffer is named after the subtree heading, with the filename
 appended.  If a buffer by that name already exists, it is
@@ -679,7 +688,7 @@ selected instead of creating a new buffer."
              ) ) ) )
     (message word-count)
     ) )
-(add-hook 'LaTeX-mode-hook (lambda () (define-key LaTeX-mode-map (kdb "C-c w") 'texcount)))
+;; (add-hook 'LaTeX-mode-hook (lambda () (define-key 'LaTeX-mode-map (kbd "C-c w") 'texcount)))
 
 
 ;;; U
@@ -689,12 +698,14 @@ selected instead of creating a new buffer."
 ;;; W
 ;;### activate word count mode
 ;; This mode will count the LaTeX markup, but it does give the count of incrementally added words.
-(use-package wc-mode)
+(require 'wc-mode)
 (add-hook 'text-mode-hook 'wc-mode)
 ;; Suggested setting
 (global-set-key "\C-cw" 'wc-mode)
 
 ;;; X
 ;;; Y
+(yas-minor-mode)
+
 (global-set-key "\C-o" 'yas-expand)
 ;;; Z
