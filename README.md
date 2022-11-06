@@ -3,10 +3,13 @@
 Dave Wilson, Jeff Bowman, and others have built [crafted-emacs](https://github.com/SystemCrafters/crafted-emacs).
 This is an Emacs profile that tries to maximize the use of the built-in features of Emacs while minimizing the use of packages.
 Crafted-emacs is a framework on which to build further customizations.
-It is for advanced beginners and beyond.
-You need some experience with configuration files: probably more experience than is required to use scimax where many packages that an academic needs are built-in.
+The franework is feature-rich enough  with the essentials to save you a lot of time.
+I became productive with this profile faster than with most other configurations.
+
+However, I still think it is for advanced beginners and beyond.
+You need some experience with configuration files: probably more experience than is required to use a profile like scimax where many packages that an academic needs are built-in.
 I cannot compare it to Doom or Spacemacs because I have not invested sufficient effort in mastering them.
-However, with minimal effort, you can have a *Dave Wilson-like* environment up and running.
+However, with minimal effort, you can have a *Dave Wilson-like* environment up and running with your favorite configurations on top of it in several hours.
 I really like it!
 
 ## User configuration
@@ -27,8 +30,7 @@ You could write your own module for a workflow that is not covered by the existi
 The *crafted-completion.el* module uses the vertico, marginalia, orderless, embark, corfu, and cape stack of packages for autocompletion in place of ivy or helm.
 These package build on top of Emacs's built-in completion system rather than displace it with a separate system as in the case of ivy or helm.
 You can be one of the cool kids using this stack without having to install and configure each package on their own.
-
-Note that if you must use ivy or helm (say for compatibility with org-ref), then you will need 
+Note that if you must use ivy or helm (say for compatibility with org-ref), then you will need comment out the *crafted-completions.el* file.
 
 You will find below the module calls my keybindings, functions, and package configuration that I expect to be present.
 For example, I bind `cmd` to the `Meta` key and `option` to the `Super` key.
