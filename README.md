@@ -68,8 +68,16 @@ I installed the following:
 
 - use-package (I know; I should have used straight, but I was in a hurry.)
 - atomic-chrome (enables hooking up with GhostText to edit textareas in webpages.)
+- language-tool
+- org-pomodro
+- org-roam
+- wc-mode (for displaying word counts in the modeline)
 - yasnippets
 
 ## What is missing
 
 - A crafted-bibtex module. I may have to install citar for handling BibTeX.
+
+## Disclaimer
+
+I am getting an error message on startup but the features of my config.el are working fine.
